@@ -33,6 +33,7 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
+import androidx.core.view.isVisible
 import app.grapheneos.camera.CamConfig
 import app.grapheneos.camera.R
 import app.grapheneos.camera.databinding.SettingsBinding
@@ -94,12 +95,13 @@ class SettingsDialog(mActivity: MainActivity) :
 
         moreSettingsButton = binding.moreSettings
         moreSettingsButton.setOnClickListener {
-            if (!mActivity.videoCapturer.isRecording) {
+            if (!mActivity.videoCapturer.isRecording && !(mActivity is SecureMainActivity)) {
                 openMoreSettings()
             } else {
                 mActivity.showMessage(getString(R.string.more_settings_unavailable_during_recording))
             }
         }
+        moreSettingsButton.visibility = if (mActivity is SecureMainActivity) View.GONE else View.VISIBLE
 
         window?.setBackgroundDrawableResource(android.R.color.transparent)
         window?.setDimAmount(0f)
@@ -537,7 +539,7 @@ class SettingsDialog(mActivity: MainActivity) :
             override fun onAnimationStart(p0: Animation?) {}
 
             override fun onAnimationEnd(p0: Animation?) {
-                moreSettingsButton.visibility = View.VISIBLE
+                moreSettingsButton.visibility = if (mActivity is SecureMainActivity) View.GONE else View.VISIBLE
             }
 
             override fun onAnimationRepeat(p0: Animation?) {}
